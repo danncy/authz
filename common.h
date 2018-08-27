@@ -7,4 +7,14 @@ enum PluginResult {
   PluginContinue = 1,
 };
 
+enum PluginType {
+  TYPE_C,
+  TYPE_NODE,
+};
+
+enum PluginRelation {
+  AND,
+  OR,
+};
+
 #endif // !AUTHZ_DEF_H_

@@ -1,27 +1,54 @@
-#include "requrest.h"
+#include "request.h"
+#include "mainframe.h"
 
 namespace Twf {
 
-void Request::assign(const string& key, const string& value) {
+Request::Request() {}
+
+Request::~Request() {
+  mainframe_.reset();
+}
+
+void Request::assign(const std::string& key, const std::string& value) {
   params_[key] = value;
 }
 
-bool Request::has_key(const string& key) {
+bool Request::hasKey(const std::string& key) {
   return params_.find(key) != params_.end();
 }
 
-string& Request::operator[](const string& key) {
-  if (!has_key(key))
+std::string& Request::operator[](const std::string& key) {
+  if (!hasKey(key))
     return undefined_;
 
   return params_[key];
 }
 
-string& Request::operator[](string&& key) {
-  if (!has_key(key))
+std::string& Request::operator[](std::string&& key) {
+  if (!hasKey(key))
     return undefined_;
 
   return params_[key];
+}
+
+bool Request::addService(const std::string& service_name) {
+  auto mainframe = mainframe_.lock();
+  if (!mainframe) {
+    // LOG ERROR
+    return false;
+  }
+
+  return mainframe->addService(service_name);
+}
+
+bool Request::addPlugin(const std::string& plugin_url, PluginRelation relation) {
+  auto mainframe = mainframe_.lock();
+  if (!mainframe) {
+    // LOG ERROR
+    return false;
+  }
+
+  return mainframe->addPlugin(plugin_url, relation);
 }
 
 }

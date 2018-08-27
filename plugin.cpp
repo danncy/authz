@@ -11,10 +11,8 @@ Plugin::~Plugin() {
   
 }
 
-int Plugin::run() {
-
-  int rv = main_();
-
+int Plugin::run(Request* req, Response* res) {
+  int rv = main_(req, res);
   return rv;
 }
 
