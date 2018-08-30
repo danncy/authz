@@ -1,6 +1,8 @@
 PROJECT(authz)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-ADD_DEFINITIONS(-std=c++11)
+ADD_DEFINITIONS(-std=c++11
+    -DBOOST_LOG_DYN_LINK
+)
 SET(CMAKE_BUILE_TYPE DEBUG)
 SET(CMAKE_C_FLAGS_DEBUG "-g -Wall")
 SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
@@ -9,6 +11,7 @@ FIND_PACKAGE(Boost REQUIRED COMPONENTS
     regex
     filesystem
     log
+    log_setup
 )
 
 IF(NOT Boost_FOUND)
@@ -28,4 +31,11 @@ AUX_SOURCE_DIRECTORY(. DIR_SRCS)
 SET(SOURCES ${DIR_SRCS})
 
 ADD_EXECUTABLE(main ${SOURCES})
-TARGET_LINK_LIBRARIES(main pthread)
+TARGET_LINK_LIBRARIES(main
+    pthread
+    boost_system
+    boost_filesystem
+    boost_log_setup
+    boost_log
+    boost_thread
+)
