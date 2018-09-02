@@ -12,6 +12,7 @@ FIND_PACKAGE(Boost REQUIRED COMPONENTS
     filesystem
     log
     log_setup
+    thread
 )
 
 IF(NOT Boost_FOUND)
@@ -28,14 +29,13 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 # LINK_DIRECTORIES(${PROJECT_BINARY_DIR}/lib ${PROJECT_SOURCE_DIR}/third_party/libevent/lib/)
 
 AUX_SOURCE_DIRECTORY(. DIR_SRCS)
-SET(SOURCES ${DIR_SRCS})
+AUX_SOURCE_DIRECTORY(./tests/ DIR_SRCS)
 
-ADD_EXECUTABLE(main ${SOURCES})
+ADD_EXECUTABLE(main ${DIR_SRCS})
 TARGET_LINK_LIBRARIES(main
     pthread
-    boost_system
-    boost_filesystem
-    boost_log_setup
-    boost_log
-    boost_thread
+    gtest
+    gmock
+    mockcpp
+    ${Boost_LIBRARIES}
 )

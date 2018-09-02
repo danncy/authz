@@ -1,21 +1,21 @@
+#include "common.h"
+#include "mainframe.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <memory>
 #include <functional>
-
-#include "common.h"
-#include "mainframe.h"
-
-
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 namespace logging=boost::log;
 namespace src = boost::log::sources;
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
-void init1()
+void init_logging()
 {
     logging::add_file_log
     (
@@ -27,36 +27,22 @@ void init1()
     );
     
     logging::core::get()->set_filter(logging::trivial::severity>=logging::trivial::info);
+    logging::add_common_attributes();
 
 }
 
 using namespace logging::trivial;
 src::severity_logger<logging::trivial::severity_level> lg;
 
-int main()
-{
+int main(int argc, char** argv) {
 
-    init1();
-
-
-    logging::add_common_attributes();
-
-    
-    LOG(fatal) << "A fatal severity message opopopopopopopopo";
-
-    /*BOOST_LOG_SEV(lg, trace) << "A trace severity message";
-    BOOST_LOG_SEV(lg, debug) << "A debug severity message";
-    BOOST_LOG_SEV(lg, info) << "An informational severity message";
-    BOOST_LOG_SEV(lg, warning) << "A warning severity message";
-    BOOST_LOG_SEV(lg, error) << "An error severity message";
-    BOOST_LOG_SEV(lg, fatal) << "A fatal severity message";
-*/
-    LOG(error) << "error -------------- .";
+    init_logging();
+    ::testing::InitGoogleMock(&argc, argv);
 
     Twf::Request req;
     Twf::Request res;
     std::unique_ptr<Twf::MainFrame> mainframe(new Twf::MainFrame(req, res));
     mainframe->run();
 
-    return 0;
+    return RUN_ALL_TESTS();
 }
